@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
-import { param, validationResult } from 'express-validator';
+import { param, validationResult, body } from 'express-validator';
 import Budget from '../models/Budget';
 
 declare global {
@@ -41,4 +41,17 @@ export const validateBudgetExists = async (req: Request, res: Response, next: Ne
         // console.log(error);
         res.status(500).json({ error: "There was an error getting the budget" });
     }
+}
+
+export const validateBudgetInput = async (req: Request, res: Response, next: NextFunction) => {
+    await body('name')
+        .notEmpty().withMessage("Name is required")
+        .run(req)
+    await body('amount')
+        .notEmpty().withMessage("Amount is required")
+        .isNumeric().withMessage("Amount must be a number")
+        .custom((value) => value > 0).withMessage("Amount must be greater than 0")
+        .run(req)
+
+    next()
 }
