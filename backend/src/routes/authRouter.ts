@@ -16,4 +16,13 @@ router.post('/create-account',
     AuthController.createAccount
 );
 
+router.post('/confirm-account',
+    body('token')
+        .notEmpty()
+        .isLength({ min: 6, max: 6 })
+        .withMessage('Token is required'),
+    handleInputErrors,
+    AuthController.confirmAccount
+);
+
 export default router;
