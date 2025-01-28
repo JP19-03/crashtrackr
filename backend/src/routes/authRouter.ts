@@ -6,6 +6,8 @@ import { limiter } from "../config/limiter";
 
 const router = Router();
 
+router.use(limiter);
+
 router.post('/create-account',
     body('name')
         .notEmpty().withMessage('Name is required'),
@@ -18,7 +20,6 @@ router.post('/create-account',
 );
 
 router.post('/confirm-account',
-    limiter,
     body('token')
         .notEmpty()
         .isLength({ min: 6, max: 6 })
