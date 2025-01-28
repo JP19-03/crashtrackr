@@ -27,4 +27,13 @@ router.post('/confirm-account',
     AuthController.confirmAccount
 );
 
+router.post('/login',
+    body('email')
+        .isEmail().withMessage('Email is invalid'),
+    body('password')
+        .notEmpty().withMessage('Password is required'),
+    handleInputErrors,
+    AuthController.login
+);
+
 export default router;
