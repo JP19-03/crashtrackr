@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 import { AuthController } from "../controllers/AuthController";
 import { handleInputErrors } from "../middleware/validation";
 import { limiter } from "../config/limiter";
+import { autenticate } from "../middleware/auth";
 
 const router = Router();
 
@@ -52,5 +53,21 @@ router.post('/validate-token',
     handleInputErrors,
     AuthController.validateToken
 )
+
+router.post('/reset-password/:token',
+    param('token')
+        .notEmpty()
+        .isLength({ min: 6, max: 6 })
+        .withMessage('Token is required'),
+    body('password')
+        .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long'),
+    handleInputErrors,
+    AuthController.resetPasswordWithToken
+)
+
+router.get('/user',
+    autenticate,
+    AuthController.user
+);
 
 export default router;
