@@ -37,4 +37,20 @@ router.post('/login',
     AuthController.login
 );
 
+router.post('/forgot-password',
+    body('email')
+        .isEmail().withMessage('Email is invalid'),
+    handleInputErrors,
+    AuthController.forgotPassword
+);
+
+router.post('/validate-token',
+    body('token')
+        .notEmpty()
+        .isLength({ min: 6, max: 6 })
+        .withMessage('Token is required'),
+    handleInputErrors,
+    AuthController.validateToken
+)
+
 export default router;

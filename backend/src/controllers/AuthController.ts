@@ -84,4 +84,41 @@ export class AuthController {
 
         res.json(token);
     }
+
+    static forgotPassword = async (req: Request, res: Response) => {
+        const { email } = req.body;
+
+        // Check if email already exists
+        const user = await User.findOne({ where: { email } });
+        if (!user) {
+            const error = new Error('User not found');
+            res.status(404).json({ error: error.message });
+            return;
+        }
+        user.token = generateToken();
+        await user.save();
+
+        await AuthEmail.sendPasswordResetToken({
+            name: user.name,
+            email: user.email,
+            token: user.token
+        })
+
+        res.json("Check your email for password reset instructions");
+
+    }
+
+    static validateToken = async (req: Request, res: Response) => {
+        const { token } = req.body;
+
+        const tokenExists = await User.findOne({ where: { token } });
+
+        if (!tokenExists) {
+            const error = new Error('Invalid token');
+            res.status(404).json({ error: error.message });
+            return;
+        }
+
+        res.json("Token is valid");
+    }
 }
