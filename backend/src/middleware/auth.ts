@@ -10,7 +10,7 @@ declare global {
     }
 }
 
-export const autenticate = async (req: Request, res: Response, next: NextFunction) => {
+export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
     const bearer = req.headers.authorization;
     if (!bearer) {
         res.status(401).json({ error: 'Unauthorized' });
