@@ -9,7 +9,9 @@ export class BudgetController {
                 order: [
                     ['createdAt', 'DESC']
                 ],
-                // TODO: Filter by authenticated user
+                where: {
+                    userId: req.user.id
+                }
             });
 
             res.status(200).json(budgets);
@@ -22,7 +24,7 @@ export class BudgetController {
     static create = async (req: Request, res: Response) => {
         try {
             const budget = new Budget(req.body);
-
+            budget.userId = req.user.id;
             await budget.save();
 
             res.status(201).json('Budget created successfully');
