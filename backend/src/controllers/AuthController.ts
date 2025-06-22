@@ -20,7 +20,7 @@ export class AuthController {
 
 
         try {
-            const user = new User(req.body);
+            const user = await User.create(req.body);
             user.password = await hashPassword(password);
             user.token = generateToken();
             await user.save();
